@@ -8,6 +8,7 @@ const cors = require("cors");
 require("dotenv").config();
 
 const messageRoutes = require("./routes/messageRoutes");
+const analyzerRoutes = require("./routes/analyzerRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -22,6 +23,7 @@ app.get("/", (req, res) => {
 // Connect route to API path
 // All requests to /api/message will be handled by messageRoutes
 app.use("/api/message", messageRoutes);
+app.use("/api/analyzer", analyzerRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
