@@ -1,4 +1,7 @@
 import { useState } from "react";
+import AnalysisCard from "./components/AnalysisCard";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function App() {
   const [resumeText, setResumeText] = useState("");
@@ -7,31 +10,39 @@ function App() {
   const [error, setError] = useState("");
 
   const handleAnalyze = async () => {
+    const trimmedResumeText = resumeText.trim();
+
+    if (!trimmedResumeText) {
+      setError("Please paste your resume text before starting the analysis.");
+      setAnalysis(null);
+      return;
+    }
+
     setLoading(true);
     setError("");
     setAnalysis(null);
 
     try {
-      const response = await fetch("http://localhost:5000/api/analyzer", {
+      const response = await fetch(`${API_BASE_URL}/api/analyzer`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ resumeText }),
+        body: JSON.stringify({ resumeText: trimmedResumeText }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Something went wrong");
+        throw new Error(data.message || "Something went wrong.");
       }
 
       setAnalysis(data.analysis);
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Failed to analyze resume.");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -68,7 +79,7 @@ function App() {
 
             <button
               onClick={handleAnalyze}
-              disabled={loading}
+              disabled={loading || !resumeText.trim()}
               className="mt-4 inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-3 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? "Analyzing Resume..." : "Analyze Resume"}
@@ -89,72 +100,10 @@ function App() {
               </p>
             </div>
 
-            {!analysis && !loading && (
-              <div className="flex min-h-[300px] items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50 px-6 text-center text-sm text-slate-500">
-                No analysis yet. Submit resume text to generate feedback.
-              </div>
-            )}
-
-            {loading && (
-              <div className="flex min-h-[300px] items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-500">
-                Generating analysis...
-              </div>
-            )}
-
-            {analysis && (
-              <div className="space-y-6">
-                <div className="rounded-xl bg-blue-50 p-4">
-                  <p className="text-sm font-medium text-blue-700">
-                    Overall Resume Score
-                  </p>
-                  <h3 className="mt-2 text-3xl font-bold text-slate-900">
-                    {analysis.overallScore}/100
-                  </h3>
-                </div>
-
-                <Section title="Key Strengths" items={analysis.strengths} />
-                <Section
-                  title="Areas for Improvement"
-                  items={analysis.weaknesses}
-                />
-                <Section
-                  title="Actionable Suggestions"
-                  items={analysis.suggestions}
-                />
-
-                <div>
-                  <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
-                    Summary
-                  </h3>
-                  <p className="rounded-xl bg-slate-50 p-4 text-sm leading-6 text-slate-700">
-                    {analysis.summary}
-                  </p>
-                </div>
-              </div>
-            )}
+            <AnalysisCard analysis={analysis} loading={loading} />
           </div>
         </div>
       </div>
-    </div>
-  );
-}
-
-function Section({ title, items }) {
-  return (
-    <div>
-      <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
-        {title}
-      </h3>
-      <ul className="space-y-2">
-        {items.map((item, index) => (
-          <li
-            key={index}
-            className="rounded-xl bg-slate-50 p-4 text-sm leading-6 text-slate-700"
-          >
-            {item}
-          </li>
-        ))}
-      </ul>
     </div>
   );
 }
