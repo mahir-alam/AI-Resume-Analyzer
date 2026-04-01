@@ -5,6 +5,7 @@ const analyzeResume = async (req, res) => {
   try {
     const { resumeText, jobDescription } = req.body;
     let finalResumeText = resumeText?.trim() || "";
+    const hasJobDescription = jobDescription && jobDescription.trim() !== "";
 
     if (req.file) {
       try {
@@ -42,12 +43,12 @@ const analyzeResume = async (req, res) => {
     const prompt = `
 You are a professional resume reviewer and ATS optimization expert.
 
-Analyze the resume and compare it to the job description if one is provided.
+Analyze the resume and compare it to the job description only if one is provided.
 
 Return ONLY valid JSON in this exact format:
 {
   "overallScore": number,
-  "atsMatchScore": number,
+  "atsMatchScore": number | null,
   "summary": "2-3 sentence professional evaluation",
   "strengths": ["point 1", "point 2", "point 3"],
   "weaknesses": ["point 1", "point 2", "point 3"],
@@ -60,9 +61,11 @@ Scoring rules:
 - overallScore = overall resume quality, regardless of the job description
 - overallScore should consider clarity, structure, relevance of experience, quantified impact, quality of projects, and professionalism
 - atsMatchScore = match against the provided job description only
-- atsMatchScore should consider keyword alignment, required skills match, preferred skills match, and missing role-specific qualifications
+- If no job description is provided, set atsMatchScore to null
+- If no job description is provided, set missingKeywords to []
+- If no job description is provided, set matchedKeywords to []
+- Do not invent ATS-specific keywords when no job description is given
 - These two scores should usually be different unless there is a very strong reason for them to be the same
-- If no job description is provided, set atsMatchScore equal to overallScore
 
 Output rules:
 - Be specific and actionable
@@ -77,7 +80,7 @@ Resume:
 ${finalResumeText}
 
 Job Description:
-${jobDescription && jobDescription.trim() ? jobDescription : "Not provided"}
+${hasJobDescription ? jobDescription.trim() : "Not provided"}
 `;
 
     const response = await openai.chat.completions.create({

@@ -17,9 +17,13 @@ function AnalysisCard({ analysis, loading }) {
     );
   }
 
+  const showAtsSection =
+    analysis.atsMatchScore !== null &&
+    analysis.atsMatchScore !== undefined;
+
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className={`grid gap-4 ${showAtsSection ? "md:grid-cols-2" : ""}`}>
         <div className="rounded-[24px] border border-cyan-400/20 bg-cyan-400/10 p-6">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">
             Resume Score
@@ -33,20 +37,20 @@ function AnalysisCard({ analysis, loading }) {
           </div>
         </div>
 
-        <div className="rounded-[24px] border border-purple-400/20 bg-purple-400/10 p-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-purple-300">
-            ATS Match Score
-          </p>
+        {showAtsSection && (
+          <div className="rounded-[24px] border border-purple-400/20 bg-purple-400/10 p-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-purple-300">
+              ATS Match Score
+            </p>
 
-          <div className="mt-3 flex items-end gap-3">
-            <h3 className="text-5xl font-semibold text-white">
-              {analysis.atsMatchScore ?? "N/A"}
-            </h3>
-            {analysis.atsMatchScore !== undefined && (
+            <div className="mt-3 flex items-end gap-3">
+              <h3 className="text-5xl font-semibold text-white">
+                {analysis.atsMatchScore}
+              </h3>
               <span className="pb-2 text-sm text-slate-300">/ 100</span>
-            )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <div className="rounded-[24px] border border-white/10 bg-white/5 p-6">
@@ -56,7 +60,7 @@ function AnalysisCard({ analysis, loading }) {
         <p className="text-sm leading-7 text-slate-300">{analysis.summary}</p>
       </div>
 
-      {analysis.matchedKeywords?.length > 0 && (
+      {showAtsSection && analysis.matchedKeywords?.length > 0 && (
         <div className="rounded-[24px] border border-green-400/20 bg-green-400/10 p-6">
           <h3 className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-green-300">
             Matched Keywords
@@ -74,7 +78,7 @@ function AnalysisCard({ analysis, loading }) {
         </div>
       )}
 
-      {analysis.missingKeywords?.length > 0 && (
+      {showAtsSection && analysis.missingKeywords?.length > 0 && (
         <div className="rounded-[24px] border border-yellow-400/20 bg-yellow-400/10 p-6">
           <h3 className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-yellow-300">
             Missing Keywords
