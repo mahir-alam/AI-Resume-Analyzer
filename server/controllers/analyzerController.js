@@ -1,42 +1,84 @@
-const analyzeResume = (req, res) => {
-  const { resumeText } = req.body;
+import OpenAI from "openai";
 
-  // Validate input
-  if (!resumeText || resumeText.trim() === "") {
-    return res.status(400).json({
-      success: false,
-      message: "Resume text is required.",
+const analyzeResume = async (req, res) => {
+  try {
+    const { resumeText } = req.body;
+
+    if (!resumeText || resumeText.trim() === "") {
+      return res.status(400).json({
+        message: "Resume text is required.",
+      });
+    }
+
+    if (!process.env.OPENAI_API_KEY) {
+      return res.status(500).json({
+        message: "OpenAI API key is missing in server environment variables.",
+      });
+    }
+
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+
+    const prompt = `
+You are an expert resume reviewer.
+
+Analyze the following resume and return a structured JSON response.
+
+Resume:
+${resumeText}
+
+Return ONLY valid JSON in this exact format:
+{
+  "overallScore": number,
+  "strengths": ["point 1", "point 2", "point 3"],
+  "weaknesses": ["point 1", "point 2", "point 3"],
+  "suggestions": ["point 1", "point 2", "point 3"],
+  "summary": "2-3 sentence professional summary"
+}
+`;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-5.4-mini",
+      messages: [
+        {
+          role: "system",
+          content: "You are a professional resume analyzer.",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      temperature: 0.7,
+    });
+
+    const aiText = response.choices[0].message.content;
+
+    let parsed;
+
+    try {
+      parsed = JSON.parse(aiText);
+    } catch (parseError) {
+      console.error("JSON parse error from OpenAI response:");
+      console.error(aiText);
+
+      return res.status(500).json({
+        message: "Failed to parse AI response.",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Resume analyzed successfully.",
+      analysis: parsed,
+    });
+  } catch (error) {
+    console.error("AI Error:", error);
+
+    return res.status(500).json({
+      message: "Error analyzing resume with AI.",
     });
   }
-
-  // Placeholder analysis for now
-  // Later this will be replaced with real OpenAI-based analysis
-  const analysis = {
-    overallScore: 74,
-    strengths: [
-      "Demonstrates relevant technical exposure through hands-on project work.",
-      "Includes core technologies that are commonly expected in software development roles.",
-      "Shows a clear interest in building practical, career-focused projects.",
-    ],
-    weaknesses: [
-      "Some experience statements may be too broad and do not clearly show individual impact.",
-      "The resume could better highlight measurable outcomes and technical contributions.",
-      "Role-specific keywords may need stronger alignment with target job descriptions for ATS performance.",
-    ],
-    suggestions: [
-      "Rewrite experience and project bullet points using stronger action verbs and clearer ownership.",
-      "Add quantified results where possible, such as performance improvements, time savings, or scale of impact.",
-      "Tailor technical skills and project wording to better match the requirements of the job being targeted.",
-    ],
-    summary:
-      "This resume shows solid foundational potential for entry-level software roles, but could be strengthened with more measurable achievements, sharper bullet points, and better ATS alignment.",
-  };
-
-  return res.status(200).json({
-    success: true,
-    message: "Resume analyzed successfully.",
-    analysis,
-  });
 };
 
-module.exports = { analyzeResume };
+export { analyzeResume };

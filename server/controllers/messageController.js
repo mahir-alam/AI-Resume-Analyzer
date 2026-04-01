@@ -4,7 +4,9 @@
 // Separating controllers keeps logic modular, reusable, and easier to maintain.
 
 const getMessage = (req, res) => {
-  res.json({ message: "Hello from backend" });
+  res.json({
+    message: "Hello from backend",
+  });
 };
 
-module.exports = { getMessage };
+export { getMessage };
