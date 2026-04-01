@@ -1,12 +1,31 @@
 import OpenAI from "openai";
+import { PDFParse } from "pdf-parse";
 
 const analyzeResume = async (req, res) => {
   try {
     const { resumeText, jobDescription } = req.body;
+    let finalResumeText = resumeText?.trim() || "";
 
-    if (!resumeText || resumeText.trim() === "") {
+    if (req.file) {
+      try {
+        const parser = new PDFParse({
+          data: req.file.buffer,
+        });
+
+        const parsedPdf = await parser.getText();
+        finalResumeText = parsedPdf.text.trim();
+      } catch (error) {
+        console.error("PDF parse error:", error);
+
+        return res.status(400).json({
+          message: "Failed to parse uploaded PDF.",
+        });
+      }
+    }
+
+    if (!finalResumeText) {
       return res.status(400).json({
-        message: "Resume text is required.",
+        message: "Resume text or PDF file is required.",
       });
     }
 
@@ -55,7 +74,7 @@ Output rules:
 - Keep the tone professional and concise
 
 Resume:
-${resumeText}
+${finalResumeText}
 
 Job Description:
 ${jobDescription && jobDescription.trim() ? jobDescription : "Not provided"}

@@ -5,6 +5,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function App() {
   const [resumeText, setResumeText] = useState("");
+  const [resumeFile, setResumeFile] = useState(null);
   const [jobDescription, setJobDescription] = useState("");
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -13,26 +14,27 @@ function App() {
   const handleAnalyze = async () => {
     const trimmedResumeText = resumeText.trim();
 
-    if (!trimmedResumeText) {
-      setError("Please paste your resume text before starting the analysis.");
+    if (!trimmedResumeText && !resumeFile) {
+      setError("Please paste your resume text or upload a PDF before starting the analysis.");
       setAnalysis(null);
       return;
     }
-
     setLoading(true);
     setError("");
     setAnalysis(null);
 
     try {
+      const formData = new FormData();
+      formData.append("resumeText", trimmedResumeText);
+      formData.append("jobDescription", jobDescription.trim());
+
+      if (resumeFile) {
+        formData.append("resumeFile", resumeFile);
+      }
+
       const response = await fetch(`${API_BASE_URL}/api/analyzer`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          resumeText: trimmedResumeText,
-          jobDescription: jobDescription.trim(),
-        }),
+        body: formData,
       });
 
       const data = await response.json();
@@ -129,6 +131,25 @@ function App() {
 
             <div className="mt-6 rounded-[28px] border border-slate-200 bg-slate-50 p-4">
               <label className="mb-3 block text-sm font-semibold text-slate-700">
+                Upload Resume PDF (Optional)
+              </label>
+
+              <input
+                type="file"
+                accept=".pdf"
+                onChange={(e) => setResumeFile(e.target.files[0] || null)}
+                className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700"
+              />
+
+              {resumeFile && (
+                <p className="mt-3 text-sm text-slate-500">
+                  Selected file: {resumeFile.name}
+                </p>
+              )}
+            </div>
+
+            <div className="mt-6 rounded-[28px] border border-slate-200 bg-slate-50 p-4">
+              <label className="mb-3 block text-sm font-semibold text-slate-700">
                 Job Description (Optional)
               </label>
 
@@ -153,7 +174,7 @@ function App() {
 
               <button
                 onClick={handleAnalyze}
-                disabled={loading || !resumeText.trim()}
+                disabled={loading || (!resumeText.trim() && !resumeFile)}
                 className="inline-flex min-w-[190px] items-center justify-center rounded-2xl bg-slate-950 px-6 py-3.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-cyan-600 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {loading ? "Analyzing Resume..." : "Analyze Resume"}
