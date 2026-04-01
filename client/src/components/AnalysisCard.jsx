@@ -18,8 +18,7 @@ function AnalysisCard({ analysis, loading }) {
   }
 
   return (
-    <div className="space-y-8">
-      {/* SCORE + SUMMARY */}
+    <div className="space-y-6">
       <div className="rounded-[24px] border border-cyan-400/20 bg-cyan-400/10 p-6">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-300">
           Resume Score
@@ -37,21 +36,18 @@ function AnalysisCard({ analysis, loading }) {
         </p>
       </div>
 
-      {/* STRENGTHS */}
       <AnalysisSection
         title="Key Strengths"
         items={analysis.strengths}
         color="green"
       />
 
-      {/* WEAKNESSES */}
       <AnalysisSection
         title="Areas for Improvement"
         items={analysis.weaknesses}
         color="yellow"
       />
 
-      {/* SUGGESTIONS */}
       <AnalysisSection
         title="Actionable Suggestions"
         items={analysis.suggestions}

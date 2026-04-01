@@ -47,72 +47,98 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
-      <div className="mx-auto max-w-7xl px-6 py-10 sm:px-8 lg:px-10">
-        <div className="mb-10 rounded-[28px] border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-sm">
-          <div className="max-w-3xl">
-            <p className="mb-4 inline-block rounded-full border border-cyan-400/30 bg-cyan-400/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-cyan-300">
-              AI-Powered Resume Review
-            </p>
+      <header className="border-b border-white/10 bg-slate-900/90 backdrop-blur">
+        <div className="w-full px-6 py-5 sm:px-8 xl:px-10">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-3xl">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-cyan-300">
+                AI-Powered Resume Review
+              </p>
+              <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+                AI Resume Analyzer
+              </h1>
+              <p className="mt-2 text-sm leading-6 text-slate-400 sm:text-base">
+                Structured feedback, clearer strengths and weaknesses, and
+                recruiter-style suggestions.
+              </p>
+            </div>
 
-            <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              Improve your resume with structured, actionable feedback.
-            </h1>
-
-            <p className="mt-5 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">
-              Paste your resume content and receive a professional evaluation
-              with strengths, improvement areas, and recruiter-style
-              suggestions designed to help you present your experience more
-              effectively.
-            </p>
-          </div>
-        </div>
-
-        <div className="grid gap-8 xl:grid-cols-[1.05fr_0.95fr]">
-          <div className="rounded-[28px] border border-white/10 bg-white p-6 text-slate-900 shadow-2xl sm:p-8">
-            <div className="mb-5 flex items-start justify-between gap-4">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-700">
-                  Resume Input
+            <div className="flex gap-3">
+              <div className="rounded-xl border border-white/10 bg-slate-950/60 px-4 py-2">
+                <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
+                  Mode
                 </p>
-                <h2 className="mt-2 text-2xl font-semibold text-slate-900">
-                  Analyze your resume draft
-                </h2>
-                <p className="mt-2 max-w-xl text-sm leading-6 text-slate-600">
-                  Paste your resume text below to generate a structured review.
-                  This will later support job-specific analysis, ATS feedback,
-                  and tailored suggestions.
-                </p>
-              </div>
-
-              <div className="hidden rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-right sm:block">
-                <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
-                  Current Mode
-                </p>
-                <p className="mt-1 text-sm font-semibold text-slate-900">
+                <p className="mt-1 text-sm font-semibold text-white">
                   Placeholder Analysis
                 </p>
               </div>
+
+              <div className="rounded-xl border border-white/10 bg-slate-950/60 px-4 py-2">
+                <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
+                  Status
+                </p>
+                <p className="mt-1 text-sm font-semibold text-cyan-300">
+                  Ready
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main className="w-full px-6 py-6 sm:px-8 xl:px-10">
+        <div className="grid gap-6 2xl:grid-cols-[1fr_0.95fr]">
+          <section className="rounded-[28px] border border-white/10 bg-white p-6 text-slate-900 shadow-2xl sm:p-8">
+            <div className="mb-6 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+              <div className="max-w-3xl">
+                <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-700">
+                  Resume Input
+                </p>
+                <h2 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">
+                  Analyze your resume draft
+                </h2>
+                <p className="mt-3 text-base leading-7 text-slate-600">
+                  Paste your resume below to receive structured feedback. Later,
+                  this workspace will support ATS matching, PDF upload, and
+                  job-description comparison.
+                </p>
+              </div>
+
+              <div className="w-fit rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
+                  Current Mode
+                </p>
+                <p className="mt-1 text-sm font-semibold text-slate-900">
+                  Manual Paste
+                </p>
+              </div>
             </div>
 
-            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-3">
+            <div className="rounded-[28px] border border-slate-200 bg-slate-50 p-4">
               <textarea
                 value={resumeText}
                 onChange={(e) => setResumeText(e.target.value)}
-                placeholder="Paste your resume text here..."
-                className="min-h-[360px] w-full resize-none rounded-2xl border-0 bg-white p-5 text-sm leading-6 text-slate-700 outline-none ring-1 ring-slate-200 transition placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-500"
+                placeholder="Paste your resume here..."
+                className="min-h-[320px] w-full resize-none rounded-[22px] border-0 bg-white p-6 text-[15px] leading-7 text-slate-700 outline-none ring-1 ring-slate-200 transition placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-500"
               />
             </div>
 
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm text-slate-500">
-                Tip: Include projects, technical skills, experience, and
-                measurable achievements for stronger feedback.
-              </p>
+            <div className="mt-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+              <div className="max-w-2xl">
+                <p className="text-sm font-medium text-slate-700">
+                  Best results come from resumes that include projects,
+                  technical skills, experience, and measurable impact.
+                </p>
+                <p className="mt-1 text-sm text-slate-500">
+                  Example: technologies used, your contributions, and quantified
+                  outcomes.
+                </p>
+              </div>
 
               <button
                 onClick={handleAnalyze}
                 disabled={loading || !resumeText.trim()}
-                className="inline-flex items-center justify-center rounded-2xl bg-slate-950 px-6 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-cyan-600 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex min-w-[190px] items-center justify-center rounded-2xl bg-slate-950 px-6 py-3.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-cyan-600 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {loading ? "Analyzing Resume..." : "Analyze Resume"}
               </button>
@@ -123,26 +149,28 @@ function App() {
                 {error}
               </div>
             )}
-          </div>
+          </section>
 
-          <div className="rounded-[28px] border border-white/10 bg-slate-900 p-6 shadow-2xl sm:p-8">
-            <div className="mb-5">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-cyan-300">
+          <aside className="rounded-[28px] border border-white/10 bg-slate-900 p-6 shadow-2xl sm:p-8">
+            <div className="mb-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300">
                 Analysis Result
               </p>
-              <h2 className="mt-2 text-2xl font-semibold text-white">
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white">
                 Resume evaluation output
               </h2>
-              <p className="mt-2 text-sm leading-6 text-slate-400">
+              <p className="mt-3 text-base leading-7 text-slate-400">
                 Review the generated feedback to understand how your resume is
                 currently positioned and where it can be improved.
               </p>
             </div>
 
-            <AnalysisCard analysis={analysis} loading={loading} />
-          </div>
+            <div className="max-h-[70vh] overflow-y-auto pr-2">
+              <AnalysisCard analysis={analysis} loading={loading} />
+            </div>
+          </aside>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
