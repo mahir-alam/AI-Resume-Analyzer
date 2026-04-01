@@ -33,14 +33,24 @@ Return ONLY valid JSON in this exact format:
   "strengths": ["point 1", "point 2", "point 3"],
   "weaknesses": ["point 1", "point 2", "point 3"],
   "missingKeywords": ["keyword 1", "keyword 2", "keyword 3"],
+  "matchedKeywords": ["keyword 1", "keyword 2", "keyword 3"],
   "suggestions": ["point 1", "point 2", "point 3"]
 }
 
-Rules:
+Scoring rules:
+- overallScore = overall resume quality, regardless of the job description
+- overallScore should consider clarity, structure, relevance of experience, quantified impact, quality of projects, and professionalism
+- atsMatchScore = match against the provided job description only
+- atsMatchScore should consider keyword alignment, required skills match, preferred skills match, and missing role-specific qualifications
+- These two scores should usually be different unless there is a very strong reason for them to be the same
+- If no job description is provided, set atsMatchScore equal to overallScore
+
+Output rules:
 - Be specific and actionable
 - Focus on impact, metrics, clarity, and ATS alignment
 - If a job description is provided, compare the resume against it
 - Identify important missing keywords from the job description
+- Identify important matched keywords already present in the resume
 - Avoid generic feedback
 - Keep the tone professional and concise
 
