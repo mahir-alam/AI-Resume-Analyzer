@@ -21,21 +21,27 @@ const analyzeResume = async (req, res) => {
     });
 
     const prompt = `
-You are an expert resume reviewer.
+You are a professional resume reviewer and ATS optimization expert.
 
-Analyze the following resume and return a structured JSON response.
+Analyze the following resume and return a JSON response ONLY in this format:
+
+{
+  "overallScore": number (0-100),
+  "summary": "2-3 sentence professional evaluation",
+  "strengths": ["...", "...", "..."],
+  "weaknesses": ["...", "...", "..."],
+  "suggestions": ["...", "...", "..."]
+}
+
+Guidelines:
+- Be specific and actionable
+- Focus on impact, metrics, and clarity
+- Evaluate ATS keyword alignment
+- Avoid generic statements
+- Use concise, professional language
 
 Resume:
 ${resumeText}
-
-Return ONLY valid JSON in this exact format:
-{
-  "overallScore": number,
-  "strengths": ["point 1", "point 2", "point 3"],
-  "weaknesses": ["point 1", "point 2", "point 3"],
-  "suggestions": ["point 1", "point 2", "point 3"],
-  "summary": "2-3 sentence professional summary"
-}
 `;
 
     const response = await openai.chat.completions.create({
