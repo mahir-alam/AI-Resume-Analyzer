@@ -5,6 +5,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 function App() {
   const [resumeText, setResumeText] = useState("");
+  const [jobDescription, setJobDescription] = useState("");
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -28,7 +29,10 @@ function App() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ resumeText: trimmedResumeText }),
+        body: JSON.stringify({
+          resumeText: trimmedResumeText,
+          jobDescription: jobDescription.trim(),
+        }),
       });
 
       const data = await response.json();
@@ -123,6 +127,18 @@ function App() {
               />
             </div>
 
+            <div className="mt-6 rounded-[28px] border border-slate-200 bg-slate-50 p-4">
+              <label className="mb-3 block text-sm font-semibold text-slate-700">
+                Job Description (Optional)
+              </label>
+
+              <textarea
+                value={jobDescription}
+                onChange={(e) => setJobDescription(e.target.value)}
+                placeholder="Paste the job description here for ATS matching..."
+                className="min-h-[180px] w-full resize-none rounded-[22px] border-0 bg-white p-6 text-[15px] leading-7 text-slate-700 outline-none ring-1 ring-slate-200 transition placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-500"
+              />
+            </div>
             <div className="mt-6 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
               <div className="max-w-2xl">
                 <p className="text-sm font-medium text-slate-700">

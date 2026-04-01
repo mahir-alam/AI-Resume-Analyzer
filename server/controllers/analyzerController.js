@@ -2,7 +2,7 @@ import OpenAI from "openai";
 
 const analyzeResume = async (req, res) => {
   try {
-    const { resumeText } = req.body;
+    const { resumeText, jobDescription } = req.body;
 
     if (!resumeText || resumeText.trim() === "") {
       return res.status(400).json({
@@ -23,25 +23,32 @@ const analyzeResume = async (req, res) => {
     const prompt = `
 You are a professional resume reviewer and ATS optimization expert.
 
-Analyze the following resume and return a JSON response ONLY in this format:
+Analyze the resume and compare it to the job description if one is provided.
 
+Return ONLY valid JSON in this exact format:
 {
-  "overallScore": number (0-100),
+  "overallScore": number,
+  "atsMatchScore": number,
   "summary": "2-3 sentence professional evaluation",
-  "strengths": ["...", "...", "..."],
-  "weaknesses": ["...", "...", "..."],
-  "suggestions": ["...", "...", "..."]
+  "strengths": ["point 1", "point 2", "point 3"],
+  "weaknesses": ["point 1", "point 2", "point 3"],
+  "missingKeywords": ["keyword 1", "keyword 2", "keyword 3"],
+  "suggestions": ["point 1", "point 2", "point 3"]
 }
 
-Guidelines:
+Rules:
 - Be specific and actionable
-- Focus on impact, metrics, and clarity
-- Evaluate ATS keyword alignment
-- Avoid generic statements
-- Use concise, professional language
+- Focus on impact, metrics, clarity, and ATS alignment
+- If a job description is provided, compare the resume against it
+- Identify important missing keywords from the job description
+- Avoid generic feedback
+- Keep the tone professional and concise
 
 Resume:
 ${resumeText}
+
+Job Description:
+${jobDescription && jobDescription.trim() ? jobDescription : "Not provided"}
 `;
 
     const response = await openai.chat.completions.create({
