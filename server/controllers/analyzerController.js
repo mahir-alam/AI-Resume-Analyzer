@@ -58,41 +58,70 @@ const analyzeResume = async (req, res) => {
       apiKey: process.env.OPENAI_API_KEY,
     });
 
-    const prompt = `
-You are a professional resume reviewer and ATS optimization expert.
+const prompt = `
+You are a senior ATS (Applicant Tracking System) optimization expert and professional resume reviewer.
 
-Analyze the resume and compare it to the job description only if one is provided.
+Your job is to analyze a resume and compare it against a job description (if provided), producing structured, high-quality, realistic ATS feedback.
 
-Return ONLY valid JSON in this exact format:
+Return ONLY valid JSON in this EXACT format:
+
 {
   "overallScore": number,
   "atsMatchScore": number | null,
   "summary": "2-3 sentence professional evaluation",
   "strengths": ["point 1", "point 2", "point 3"],
   "weaknesses": ["point 1", "point 2", "point 3"],
-  "missingKeywords": ["keyword 1", "keyword 2", "keyword 3"],
   "matchedKeywords": ["keyword 1", "keyword 2", "keyword 3"],
-  "suggestions": ["point 1", "point 2", "point 3"]
+  "missingKeywords": ["keyword 1", "keyword 2", "keyword 3"],
+  "atsSuggestions": ["ATS-specific improvement 1", "ATS-specific improvement 2"],
+  "suggestions": ["general improvement 1", "general improvement 2"]
 }
 
-Scoring rules:
-- overallScore = overall resume quality, regardless of the job description
-- overallScore should consider clarity, structure, relevance of experience, quantified impact, quality of projects, and professionalism
-- atsMatchScore = match against the provided job description only
-- If no job description is provided, set atsMatchScore to null
-- If no job description is provided, set missingKeywords to []
-- If no job description is provided, set matchedKeywords to []
-- Do not invent ATS-specific keywords when no job description is given
-- These two scores should usually be different unless there is a very strong reason for them to be the same
+CRITICAL RULES:
 
-Output rules:
-- Be specific and actionable
-- Focus on impact, metrics, clarity, and ATS alignment
-- If a job description is provided, compare the resume against it
-- Identify important missing keywords from the job description
-- Identify important matched keywords already present in the resume
-- Avoid generic feedback
-- Keep the tone professional and concise
+1. overallScore:
+- Score from 1–10
+- Based on structure, clarity, impact, projects, and professionalism
+
+2. atsMatchScore:
+- Score from 1–10
+- Based ONLY on how well the resume matches the job description
+- If NO job description → return null
+
+3. matchedKeywords:
+- Extract important technical keywords FROM THE JOB DESCRIPTION
+- Include ONLY keywords that clearly appear in the resume
+- Examples: "React", "Node.js", "MongoDB", "REST APIs"
+
+4. missingKeywords:
+- Extract important keywords from job description NOT found in resume
+- Do NOT hallucinate keywords
+- Only include realistic, meaningful terms
+
+5. atsSuggestions:
+- Must be SPECIFIC to ATS optimization
+- Focus on:
+  - missing keywords
+  - formatting issues
+  - keyword density
+  - alignment with job description
+
+6. suggestions:
+- General resume improvements
+- Focus on:
+  - impact (metrics, numbers)
+  - clarity
+  - stronger bullet points
+  - better structure
+
+7. STRICT BEHAVIOR:
+- If no job description:
+  - atsMatchScore = null
+  - matchedKeywords = []
+  - missingKeywords = []
+  - atsSuggestions = []
+- DO NOT mix ATS suggestions into general suggestions
+- DO NOT return explanations outside JSON
 
 Resume:
 ${finalResumeText}
@@ -121,7 +150,12 @@ ${hasJobDescription ? jobDescription.trim() : "Not provided"}
     let parsed;
 
     try {
-      parsed = JSON.parse(aiText);
+      const cleaned = aiText
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim();
+
+      parsed = JSON.parse(cleaned);
     } catch (parseError) {
       console.error("JSON parse error from OpenAI response:");
       console.error(aiText);
@@ -130,6 +164,31 @@ ${hasJobDescription ? jobDescription.trim() : "Not provided"}
         message: "Failed to parse AI response.",
       });
     }
+    parsed.matchedKeywords = parsed.matchedKeywords || [];
+    parsed.missingKeywords = parsed.missingKeywords || [];
+    parsed.atsSuggestions = parsed.atsSuggestions || [];
+    parsed.suggestions = parsed.suggestions || [];
+
+    const normalizeScore = (value, allowNull = false) => {
+      if (allowNull && (value === null || value === undefined || value === "")) {
+        return null;
+      }
+
+      const num = Number(value);
+
+      if (Number.isNaN(num)) {
+        return allowNull ? null : 0;
+      }
+
+      if (num > 10 && num <= 100) {
+        return Math.round(num / 10);
+      }
+
+      return Math.max(0, Math.min(10, Math.round(num)));
+    };
+
+    parsed.overallScore = normalizeScore(parsed.overallScore);
+    parsed.atsMatchScore = normalizeScore(parsed.atsMatchScore, true);
 
     const savedAnalysis = await Analysis.create({
       user: req.user.userId,
