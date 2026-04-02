@@ -11,6 +11,8 @@ function History() {
   const [modalContent, setModalContent] = useState("");
   const [modalTitle, setModalTitle] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteTargetId, setDeleteTargetId] = useState("");
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -115,20 +117,23 @@ function History() {
       setModalContent("");
       setModalTitle("");
     };
+
+    const openDeleteModal = (analysisId) => {
+      setDeleteTargetId(analysisId);
+      setIsDeleteModalOpen(true);
+    };
+
+    const closeDeleteModal = () => {
+      setDeleteTargetId("");
+      setIsDeleteModalOpen(false);
+    };
+
     const handleDeleteAnalysis = async (analysisId) => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete this saved analysis?"
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
     try {
       setDeletingId(analysisId);
+      closeDeleteModal();
 
       const token = localStorage.getItem("token");
-
       const response = await fetch(`${API_BASE_URL}/api/analyzer/${analysisId}`, {
         method: "DELETE",
         headers: {
@@ -339,7 +344,7 @@ function History() {
                         )}
 
                         <button
-                          onClick={() => handleDeleteAnalysis(analysis._id)}
+                          onClick={() => openDeleteModal(analysis._id)}
                           disabled={deletingId === analysis._id}
                           className="rounded-2xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-300 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-50"
                         >
@@ -531,6 +536,38 @@ function History() {
 
             <div className="max-h-[70vh] overflow-y-auto whitespace-pre-wrap text-sm text-slate-300 leading-6 pr-2">
               {modalContent}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/70 backdrop-blur-sm px-4">
+          <div className="w-full max-w-md rounded-2xl border border-white/10 bg-slate-900 p-6 shadow-2xl">
+            <h2 className="text-lg font-semibold text-white">
+              Delete saved analysis?
+            </h2>
+
+            <p className="mt-3 text-sm leading-6 text-slate-400">
+              This action cannot be undone. The selected analysis will be permanently
+              removed from your history.
+            </p>
+
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                onClick={closeDeleteModal}
+                className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={() => handleDeleteAnalysis(deleteTargetId)}
+                disabled={deletingId === deleteTargetId}
+                className="rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-300 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {deletingId === deleteTargetId ? "Deleting..." : "Delete"}
+              </button>
             </div>
           </div>
         </div>
