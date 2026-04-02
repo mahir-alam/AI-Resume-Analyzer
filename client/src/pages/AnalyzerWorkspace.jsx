@@ -19,7 +19,7 @@ function AnalyzerWorkspace({ demoMode = false }) {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    window.location.href = "/login";
+    window.location.href = "/";
   };
 
   const handleAnalyze = async () => {
@@ -169,6 +169,13 @@ function AnalyzerWorkspace({ demoMode = false }) {
               ) : (
                 <>
                   <Link
+                    to="/"
+                    className="flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
+                  >
+                    Home
+                  </Link>
+
+                  <Link
                     to="/history"
                     className="flex items-center justify-center rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
                   >
@@ -177,7 +184,7 @@ function AnalyzerWorkspace({ demoMode = false }) {
 
                   <button
                     onClick={handleLogout}
-                    className="rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-300 transition hover:bg-red-500/20"
+                    className="flex items-center justify-center rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-300 transition hover:bg-red-500/20"
                   >
                     Logout
                   </button>

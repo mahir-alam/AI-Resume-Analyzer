@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 function Home() {
+  const token = localStorage.getItem("token");
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       <header className="border-b border-white/10 bg-slate-900/80 backdrop-blur">
@@ -14,26 +15,52 @@ function Home() {
             </h1>
           </div>
 
-          <div className="flex gap-3">
-            <Link
-              to="/demo"
-              className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
-            >
-              Try Demo
-            </Link>
-            <Link
-              to="/login"
-              className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
-            >
-              Login
-            </Link>
-            <Link
-              to="/signup"
-              className="rounded-xl bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
-            >
-              Get Started
-            </Link>
-          </div>
+            <div className="flex gap-3">
+              {!token ? (
+                <>
+                  <Link
+                    to="/demo"
+                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
+                  >
+                    Try Demo
+                  </Link>
+
+                  <Link
+                    to="/login"
+                    className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
+                  >
+                    Login
+                  </Link>
+
+                  <Link
+                    to="/signup"
+                    className="rounded-xl bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
+                  >
+                    Get Started
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/dashboard"
+                    className="flex items-center justify-center rounded-xl bg-cyan-500 px-4 py-2 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400"
+                  >
+                    Dashboard
+                  </Link>
+
+                  <button
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      localStorage.removeItem("user");
+                      window.location.href = "/";
+                    }}
+                    className="rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-300 transition hover:bg-red-500/20"
+                  >
+                    Logout
+                  </button>
+                </>
+              )}
+            </div>
         </div>
       </header>
 
