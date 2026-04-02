@@ -197,7 +197,7 @@ function AnalyzerWorkspace({ demoMode = false }) {
 
       <main className="w-full px-6 py-6 sm:px-8 xl:px-10">
         <div className="grid items-start gap-6 2xl:grid-cols-[1.03fr_0.97fr]">
-          <section className="rounded-[28px] border border-white/10 bg-white text-slate-900 shadow-2xl 2xl:sticky 2xl:top-6 2xl:h-[calc(100vh-150px)]">
+          <section className="rounded-[28px] border border-slate-300 bg-slate-100 text-slate-900 shadow-2xl 2xl:sticky 2xl:top-6 2xl:h-[calc(100vh-150px)]">
             <div className="flex h-full flex-col p-5 sm:p-6 xl:p-7">
               <div className="mb-5 flex-shrink-0">
                 <div className="mb-5 flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
@@ -215,7 +215,7 @@ function AnalyzerWorkspace({ demoMode = false }) {
                     </p>
                   </div>
 
-                  <div className="w-fit rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                  <div className="w-fit rounded-2xl border border-slate-300 bg-white/80 px-4 py-3">
                     <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
                       Current Mode
                     </p>
@@ -228,8 +228,8 @@ function AnalyzerWorkspace({ demoMode = false }) {
 
               <div className="min-h-0 flex-1 overflow-y-auto pr-2">
                 <div className="mb-5 grid gap-4 lg:grid-cols-2">
-                  <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
-                    <label className="mb-3 block text-sm font-semibold text-slate-700">
+                  <div className="rounded-[24px] border border-slate-300 bg-white/80 p-4">
+                    <label className="mb-3 block text-sm font-semibold text-slate-800">
                       Resume Name (Optional)
                     </label>
                     <input
@@ -237,12 +237,12 @@ function AnalyzerWorkspace({ demoMode = false }) {
                       value={resumeLabel}
                       onChange={(e) => setResumeLabel(e.target.value)}
                       placeholder="Example: SWE Resume v2"
-                      className="w-full rounded-[18px] border-0 bg-white px-4 py-3 text-sm text-slate-700 outline-none ring-1 ring-slate-200 transition placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-500"
+                      className="w-full rounded-[18px] border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
                     />
                   </div>
 
-                  <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
-                    <label className="mb-3 block text-sm font-semibold text-slate-700">
+                  <div className="rounded-[24px] border border-slate-300 bg-white/80 p-4">
+                    <label className="mb-3 block text-sm font-semibold text-slate-800">
                       Job Label (Optional)
                     </label>
                     <input
@@ -250,22 +250,22 @@ function AnalyzerWorkspace({ demoMode = false }) {
                       value={jobLabel}
                       onChange={(e) => setJobLabel(e.target.value)}
                       placeholder="Example: Software Developer Intern"
-                      className="w-full rounded-[18px] border-0 bg-white px-4 py-3 text-sm text-slate-700 outline-none ring-1 ring-slate-200 transition placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-500"
+                      className="w-full rounded-[18px] border border-slate-300 bg-white px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
                     />
                   </div>
                 </div>
 
-                <div className="rounded-[28px] border border-slate-200 bg-slate-50 p-4">
+                <div className="rounded-[28px] border border-slate-300 bg-white/80 p-4">
                   <textarea
                     value={resumeText}
                     onChange={(e) => setResumeText(e.target.value)}
                     placeholder="Paste your resume here..."
-                    className="min-h-[220px] w-full resize-none rounded-[22px] border-0 bg-white p-5 text-[15px] leading-7 text-slate-700 outline-none ring-1 ring-slate-200 transition placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-500 lg:min-h-[240px]"
+                    className="min-h-[220px] w-full resize-none rounded-[22px] border border-slate-300 bg-white px-5 py-5 text-[15px] leading-7 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 lg:min-h-[240px]"
                   />
                 </div>
 
-                <div className="mt-5 rounded-[28px] border border-slate-200 bg-slate-50 p-4">
-                  <label className="mb-3 block text-sm font-semibold text-slate-700">
+                <div className="mt-5 rounded-[28px] border border-slate-300 bg-white/80 p-4">
+                  <label className="mb-3 block text-sm font-semibold text-slate-800">
                     Upload Resume PDF (Optional)
                   </label>
 
@@ -273,7 +273,7 @@ function AnalyzerWorkspace({ demoMode = false }) {
                     type="file"
                     accept=".pdf"
                     onChange={(e) => setResumeFile(e.target.files[0] || null)}
-                    className="block w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700"
+                    className="block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-700"
                   />
 
                   {resumeFile && (
@@ -283,8 +283,8 @@ function AnalyzerWorkspace({ demoMode = false }) {
                   )}
                 </div>
 
-                <div className="mt-5 rounded-[28px] border border-slate-200 bg-slate-50 p-4">
-                  <label className="mb-3 block text-sm font-semibold text-slate-700">
+                <div className="mt-5 rounded-[28px] border border-slate-300 bg-white/80 p-4">
+                  <label className="mb-3 block text-sm font-semibold text-slate-800">
                     Job Description (Optional)
                   </label>
 
@@ -292,21 +292,21 @@ function AnalyzerWorkspace({ demoMode = false }) {
                     value={jobDescription}
                     onChange={(e) => setJobDescription(e.target.value)}
                     placeholder="Paste the job description here for ATS matching..."
-                    className="min-h-[130px] w-full resize-none rounded-[22px] border-0 bg-white p-5 text-[15px] leading-7 text-slate-700 outline-none ring-1 ring-slate-200 transition placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-500"
+                    className="min-h-[130px] w-full resize-none rounded-[22px] border border-slate-300 bg-white px-5 py-5 text-[15px] leading-7 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20"
                   />
                 </div>
 
                 {error && (
-                  <div className="mt-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                  <div className="mt-5 rounded-2xl border border-red-300 bg-red-100/70 px-4 py-3 text-sm text-red-700">
                     {error}
                   </div>
                 )}
               </div>
 
-              <div className="mt-4 flex-shrink-0 border-t border-slate-200 pt-4">
+              <div className="mt-4 flex-shrink-0 border-t border-slate-300 pt-4">
                 <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                   <div className="max-w-2xl">
-                    <p className="text-sm font-medium text-slate-700">
+                    <p className="text-sm font-medium text-slate-800">
                       Best results come from resumes that include projects,
                       technical skills, experience, and measurable impact.
                     </p>
@@ -353,31 +353,31 @@ function AnalyzerWorkspace({ demoMode = false }) {
               {analysis && (
                 <div className="mt-4 flex-shrink-0 border-t border-white/10 pt-4">
                   {demoMode ? (
-                  <div className="rounded-2xl border border-amber-400/30 bg-amber-500/10 px-5 py-4">
-                    <div className="flex items-start gap-3">
-                      <div className="mt-1 h-2 w-2 rounded-full bg-amber-400" />
+                    <div className="rounded-2xl border border-amber-400/30 bg-amber-500/10 px-5 py-4">
+                      <div className="flex items-start gap-3">
+                        <div className="mt-1 h-2 w-2 rounded-full bg-amber-400" />
 
-                      <div className="flex-1">
-                        <p className="text-sm font-semibold text-amber-300">
-                          Demo Mode
-                        </p>
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-amber-300">
+                            Demo Mode
+                          </p>
 
-                        <p className="mt-1 text-sm leading-6 text-slate-300">
-                          Save, history, and deletion are available in full account mode.
-                          Create an account to unlock the full experience.
-                        </p>
+                          <p className="mt-1 text-sm leading-6 text-slate-300">
+                            Save, history, and deletion are available in full account mode.
+                            Create an account to unlock the full experience.
+                          </p>
 
-                        <div className="mt-3">
-                          <Link
-                            to="/signup"
-                            className="inline-flex items-center rounded-lg bg-amber-400 px-3 py-1.5 text-xs font-semibold text-slate-900 transition hover:bg-amber-300"
-                          >
-                            Create Account
-                          </Link>
+                          <div className="mt-3">
+                            <Link
+                              to="/signup"
+                              className="inline-flex items-center rounded-lg bg-amber-400 px-3 py-1.5 text-xs font-semibold text-slate-900 transition hover:bg-amber-300"
+                            >
+                              Create Account
+                            </Link>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
                   ) : (
                     <button
                       onClick={handleSaveAnalysis}
