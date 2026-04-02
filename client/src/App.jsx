@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import History from "./pages/History";
+import Demo from "./pages/Demo";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -12,6 +13,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/demo" element={<Demo />} />
 
         <Route
           path="/login"

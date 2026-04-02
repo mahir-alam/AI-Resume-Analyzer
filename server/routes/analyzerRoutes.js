@@ -17,6 +17,6 @@ const upload = multer({
 router.get("/history", protect, getUserAnalyses);
 router.delete("/:id", protect, deleteAnalysis);
 router.post("/save", protect, saveAnalysis);
-router.post("/", protect, upload.single("resumeFile"), analyzeResume);
+router.post("/", upload.single("resumeFile"), analyzeResume);
 
 export default router;
