@@ -7,6 +7,9 @@ function History() {
   const [analyses, setAnalyses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [modalContent, setModalContent] = useState("");
+  const [modalTitle, setModalTitle] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -100,7 +103,17 @@ function History() {
 
     return cleaned;
   };
+  const openModal = (title, content) => {
+    setModalTitle(title);
+    setModalContent(content);
+    setIsModalOpen(true);
+  };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setModalContent("");
+    setModalTitle("");
+  };
   return (
     <div className="min-h-screen bg-slate-950 text-white">
       <header className="border-b border-white/10 bg-slate-900/90 backdrop-blur">
@@ -239,6 +252,12 @@ function History() {
                           <p className="mt-2 text-sm leading-6 text-slate-300">
                             {resumePreview}
                           </p>
+                          <button
+                            onClick={() => openModal("Full Resume", analysis.resumeText)}
+                            className="mt-3 text-xs font-semibold text-cyan-300 transition hover:text-cyan-200"
+                          >
+                            View Full Resume
+                          </button>
                         </div>
 
                         <div className="rounded-[20px] border border-white/10 bg-slate-950/60 p-4">
@@ -251,6 +270,14 @@ function History() {
                           <p className="mt-2 text-sm leading-6 text-slate-300">
                             {jobPreview || "No job description was used."}
                           </p>
+                          {analysis.jobDescription && (
+                            <button
+                              onClick={() => openModal("Full Job Description", analysis.jobDescription)}
+                              className="mt-3 text-xs font-semibold text-cyan-300 transition hover:text-cyan-200"
+                            >
+                              View Full Job Description
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -442,6 +469,28 @@ function History() {
           </div>
         )}
       </main>
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm px-4">
+          <div className="w-full max-w-3xl rounded-2xl border border-white/10 bg-slate-900 p-6 shadow-2xl">
+            
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-white">
+                {modalTitle}
+              </h2>
+              <button
+                onClick={closeModal}
+                className="text-sm text-slate-400 hover:text-white"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="max-h-[70vh] overflow-y-auto whitespace-pre-wrap text-sm text-slate-300 leading-6 pr-2">
+              {modalContent}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
