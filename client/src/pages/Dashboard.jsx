@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import AnalysisCard from "../components/AnalysisCard";
 
@@ -10,6 +11,8 @@ function Dashboard() {
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [resumeLabel, setResumeLabel] = useState("");
+  const [jobLabel, setJobLabel] = useState("");
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -36,6 +39,8 @@ function Dashboard() {
       const formData = new FormData();
       formData.append("resumeText", trimmedResumeText);
       formData.append("jobDescription", jobDescription.trim());
+      formData.append("resumeLabel", resumeLabel.trim());
+      formData.append("jobLabel", jobLabel.trim());
 
       if (resumeFile) {
         formData.append("resumeFile", resumeFile);
@@ -93,6 +98,13 @@ function Dashboard() {
                   </p>
                 </div>
 
+                <Link
+                  to="/history"
+                  className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
+                >
+                  View History
+                </Link>
+
                 <button
                   onClick={handleLogout}
                   className="rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-300 transition hover:bg-red-500/20"
@@ -132,6 +144,33 @@ function Dashboard() {
               </div>
             </div>
 
+            <div className="mb-6 grid gap-4 lg:grid-cols-2">
+              <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
+                <label className="mb-3 block text-sm font-semibold text-slate-700">
+                  Resume Name (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={resumeLabel}
+                  onChange={(e) => setResumeLabel(e.target.value)}
+                  placeholder="Example: SWE Resume v2"
+                  className="w-full rounded-[18px] border-0 bg-white px-4 py-3 text-sm text-slate-700 outline-none ring-1 ring-slate-200 transition placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-500"
+                />
+              </div>
+
+              <div className="rounded-[24px] border border-slate-200 bg-slate-50 p-4">
+                <label className="mb-3 block text-sm font-semibold text-slate-700">
+                  Job Label (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={jobLabel}
+                  onChange={(e) => setJobLabel(e.target.value)}
+                  placeholder="Example: Cenovus Student IT"
+                  className="w-full rounded-[18px] border-0 bg-white px-4 py-3 text-sm text-slate-700 outline-none ring-1 ring-slate-200 transition placeholder:text-slate-400 focus:ring-2 focus:ring-cyan-500"
+                />
+              </div>
+            </div>
             <div className="rounded-[28px] border border-slate-200 bg-slate-50 p-4">
               <textarea
                 value={resumeText}

@@ -19,6 +19,18 @@ const analysisSchema = new mongoose.Schema(
       type: Object,
       required: true,
     },
+    resumeLabel: {
+      type: String,
+      default: "",
+    },
+    jobLabel: {
+      type: String,
+      default: "",
+    },
+    originalFileName: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,

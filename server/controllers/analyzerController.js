@@ -4,8 +4,25 @@ import Analysis from "../models/Analysis.js";
 
 const analyzeResume = async (req, res) => {
   try {
-    const { resumeText, jobDescription } = req.body;
+    const { resumeText, jobDescription, resumeLabel, jobLabel } = req.body;
     let finalResumeText = resumeText?.trim() || "";
+    const trimmedResumeLabel = resumeLabel?.trim() || "";
+    const trimmedJobLabel = jobLabel?.trim() || "";
+    const originalFileName = req.file?.originalname || "";
+
+    const generatedResumeLabel =
+      trimmedResumeLabel ||
+      originalFileName ||
+      finalResumeText?.split("\n").map((line) => line.trim()).find(Boolean) ||
+      "Untitled Resume";
+
+    const generatedJobLabel =
+      trimmedJobLabel ||
+      jobDescription
+        ?.split("\n")
+        .map((line) => line.trim())
+        .find(Boolean) ||
+      "No Job Label";
     const hasJobDescription = jobDescription && jobDescription.trim() !== "";
 
     if (req.file) {
@@ -119,6 +136,9 @@ ${hasJobDescription ? jobDescription.trim() : "Not provided"}
       resumeText: finalResumeText,
       jobDescription: jobDescription?.trim() || "",
       analysisResult: parsed,
+      resumeLabel: generatedResumeLabel,
+      jobLabel: generatedJobLabel,
+      originalFileName,
     });
 
     return res.status(200).json({
@@ -126,7 +146,7 @@ ${hasJobDescription ? jobDescription.trim() : "Not provided"}
       analysis: parsed,
       savedAnalysisId: savedAnalysis._id,
     });
-    
+
   } catch (error) {
     console.error("AI Error:", error);
 
@@ -135,5 +155,19 @@ ${hasJobDescription ? jobDescription.trim() : "Not provided"}
     });
   }
 };
+const getUserAnalyses = async (req, res) => {
+  try {
+    const analyses = await Analysis.find({ user: req.user.userId }).sort({
+      createdAt: -1,
+    });
 
-export { analyzeResume };
+    return res.status(200).json(analyses);
+  } catch (error) {
+    console.error("Fetch Analyses Error:", error);
+
+    return res.status(500).json({
+      message: "Failed to fetch analysis history.",
+    });
+  }
+};
+export { analyzeResume, getUserAnalyses };
