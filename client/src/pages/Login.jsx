@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -90,6 +91,12 @@ function Login() {
             Login
           </button>
         </form>
+        <p className="mt-6 text-center text-sm text-slate-400">
+          Don&apos;t have an account?{" "}
+          <Link to="/signup" className="font-medium text-cyan-300 hover:text-cyan-200">
+            Create one
+          </Link>
+        </p>        
       </div>
     </div>
   );

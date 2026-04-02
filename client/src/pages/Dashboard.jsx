@@ -11,6 +11,12 @@ function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "/login";
+  };
+
   const handleAnalyze = async () => {
     const trimmedResumeText = resumeText.trim();
 
@@ -72,25 +78,23 @@ function Dashboard() {
               </p>
             </div>
 
-            <div className="flex gap-3">
-              <div className="rounded-xl border border-white/10 bg-slate-950/60 px-4 py-2">
-                <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
-                  Mode
-                </p>
-                <p className="mt-1 text-sm font-semibold text-white">
-                  AI Analysis
-                </p>
-              </div>
+              <div className="flex gap-3">
+                <div className="rounded-xl border border-white/10 bg-slate-950/60 px-4 py-2">
+                  <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
+                    Mode
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-white">
+                    AI Analysis
+                  </p>
+                </div>
 
-              <div className="rounded-xl border border-white/10 bg-slate-950/60 px-4 py-2">
-                <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
-                  Status
-                </p>
-                <p className="mt-1 text-sm font-semibold text-cyan-300">
-                  Ready
-                </p>
+                <button
+                  onClick={handleLogout}
+                  className="rounded-xl border border-red-400/20 bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-300 transition hover:bg-red-500/20"
+                >
+                  Logout
+                </button>
               </div>
-            </div>
           </div>
         </div>
       </header>
