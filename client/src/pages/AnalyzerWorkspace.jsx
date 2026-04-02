@@ -353,9 +353,31 @@ function AnalyzerWorkspace({ demoMode = false }) {
               {analysis && (
                 <div className="mt-4 flex-shrink-0 border-t border-white/10 pt-4">
                   {demoMode ? (
-                    <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">
-                      Save, history, and deletion are available in full account mode.
+                  <div className="rounded-2xl border border-amber-400/30 bg-amber-500/10 px-5 py-4">
+                    <div className="flex items-start gap-3">
+                      <div className="mt-1 h-2 w-2 rounded-full bg-amber-400" />
+
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-amber-300">
+                          Demo Mode
+                        </p>
+
+                        <p className="mt-1 text-sm leading-6 text-slate-300">
+                          Save, history, and deletion are available in full account mode.
+                          Create an account to unlock the full experience.
+                        </p>
+
+                        <div className="mt-3">
+                          <Link
+                            to="/signup"
+                            className="inline-flex items-center rounded-lg bg-amber-400 px-3 py-1.5 text-xs font-semibold text-slate-900 transition hover:bg-amber-300"
+                          >
+                            Create Account
+                          </Link>
+                        </div>
+                      </div>
                     </div>
+                  </div>
                   ) : (
                     <button
                       onClick={handleSaveAnalysis}
