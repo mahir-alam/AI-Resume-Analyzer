@@ -190,20 +190,16 @@ ${hasJobDescription ? jobDescription.trim() : "Not provided"}
     parsed.overallScore = normalizeScore(parsed.overallScore);
     parsed.atsMatchScore = normalizeScore(parsed.atsMatchScore, true);
 
-    const savedAnalysis = await Analysis.create({
-      user: req.user.userId,
-      resumeText: finalResumeText,
-      jobDescription: jobDescription?.trim() || "",
-      analysisResult: parsed,
-      resumeLabel: generatedResumeLabel,
-      jobLabel: generatedJobLabel,
-      originalFileName,
-    });
+
 
     return res.status(200).json({
       message: "Resume analyzed successfully.",
       analysis: parsed,
-      savedAnalysisId: savedAnalysis._id,
+      resumeText: finalResumeText,
+      jobDescription: jobDescription?.trim() || "",
+      resumeLabel: generatedResumeLabel,
+      jobLabel: generatedJobLabel,
+      originalFileName,
     });
 
   } catch (error) {
@@ -259,4 +255,43 @@ const deleteAnalysis = async (req, res) => {
     });
   }
 };
-export { analyzeResume, getUserAnalyses, deleteAnalysis };
+const saveAnalysis = async (req, res) => {
+  try {
+    const {
+      resumeText,
+      jobDescription,
+      analysisResult,
+      resumeLabel,
+      jobLabel,
+      originalFileName,
+    } = req.body;
+
+    if (!resumeText || !analysisResult) {
+      return res.status(400).json({
+        message: "Missing required data to save analysis.",
+      });
+    }
+
+    const savedAnalysis = await Analysis.create({
+      user: req.user.userId,
+      resumeText,
+      jobDescription: jobDescription || "",
+      analysisResult,
+      resumeLabel: resumeLabel || "Untitled Resume",
+      jobLabel: jobLabel || "No Job Label",
+      originalFileName: originalFileName || "",
+    });
+
+    return res.status(201).json({
+      message: "Analysis saved successfully.",
+      savedAnalysisId: savedAnalysis._id,
+    });
+  } catch (error) {
+    console.error("Save Analysis Error:", error);
+
+    return res.status(500).json({
+      message: "Failed to save analysis.",
+    });
+  }
+};
+export { analyzeResume, getUserAnalyses, deleteAnalysis, saveAnalysis };
