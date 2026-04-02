@@ -229,4 +229,34 @@ const getUserAnalyses = async (req, res) => {
     });
   }
 };
-export { analyzeResume, getUserAnalyses };
+
+const deleteAnalysis = async (req, res) => {
+  try {
+    const analysis = await Analysis.findById(req.params.id);
+
+    if (!analysis) {
+      return res.status(404).json({
+        message: "Analysis not found.",
+      });
+    }
+
+    if (analysis.user.toString() !== req.user.userId) {
+      return res.status(403).json({
+        message: "Not authorized to delete this analysis.",
+      });
+    }
+
+    await analysis.deleteOne();
+
+    return res.status(200).json({
+      message: "Analysis deleted successfully.",
+    });
+  } catch (error) {
+    console.error("Delete Analysis Error:", error);
+
+    return res.status(500).json({
+      message: "Failed to delete analysis.",
+    });
+  }
+};
+export { analyzeResume, getUserAnalyses, deleteAnalysis };

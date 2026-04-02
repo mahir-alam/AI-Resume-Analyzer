@@ -7,6 +7,7 @@ function History() {
   const [analyses, setAnalyses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [deletingId, setDeletingId] = useState("");
   const [modalContent, setModalContent] = useState("");
   const [modalTitle, setModalTitle] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -103,16 +104,51 @@ function History() {
 
     return cleaned;
   };
-  const openModal = (title, content) => {
-    setModalTitle(title);
-    setModalContent(content);
-    setIsModalOpen(true);
-  };
+    const openModal = (title, content) => {
+      setModalTitle(title);
+      setModalContent(content);
+      setIsModalOpen(true);
+    };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setModalContent("");
-    setModalTitle("");
+    const closeModal = () => {
+      setIsModalOpen(false);
+      setModalContent("");
+      setModalTitle("");
+    };
+    const handleDeleteAnalysis = async (analysisId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this saved analysis?"
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    try {
+      setDeletingId(analysisId);
+
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(`${API_BASE_URL}/api/analyzer/${analysisId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to delete analysis.");
+      }
+
+      setAnalyses((prev) => prev.filter((analysis) => analysis._id !== analysisId));
+    } catch (err) {
+      console.error("Delete error:", err);
+      alert(err.message || "Failed to delete analysis.");
+    } finally {
+      setDeletingId("");
+    }
   };
   return (
     <div className="min-h-screen bg-slate-950 text-white">
@@ -281,28 +317,36 @@ function History() {
                         </div>
                       </div>
                     </div>
-
-                    <div className="flex flex-wrap gap-3">
-                      <div className="w-fit rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3">
-                        <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
-                          Overall Score
-                        </p>
-                        <p className="mt-1 text-lg font-semibold text-cyan-300">
-                          {overallScore !== null ? `${overallScore}/10` : "N/A"}
-                        </p>
-                      </div>
-
-                      {atsScore !== null && atsScore !== undefined && (
-                        <div className="w-fit rounded-2xl border border-emerald-400/20 bg-emerald-500/10 px-4 py-3">
-                          <p className="text-[11px] uppercase tracking-[0.16em] text-emerald-300">
-                            ATS Match
+                      <div className="flex flex-wrap items-start gap-3">
+                        <div className="w-fit rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3">
+                          <p className="text-[11px] uppercase tracking-[0.16em] text-slate-500">
+                            Overall Score
                           </p>
-                          <p className="mt-1 text-lg font-semibold text-emerald-300">
-                            {atsScore}/10
+                          <p className="mt-1 text-lg font-semibold text-cyan-300">
+                            {overallScore !== null ? `${overallScore}/10` : "N/A"}
                           </p>
                         </div>
-                      )}
-                    </div>
+
+                        {atsScore !== null && atsScore !== undefined && (
+                          <div className="w-fit rounded-2xl border border-emerald-400/20 bg-emerald-500/10 px-4 py-3">
+                            <p className="text-[11px] uppercase tracking-[0.16em] text-emerald-300">
+                              ATS Match
+                            </p>
+                            <p className="mt-1 text-lg font-semibold text-emerald-300">
+                              {atsScore}/10
+                            </p>
+                          </div>
+                        )}
+
+                        <button
+                          onClick={() => handleDeleteAnalysis(analysis._id)}
+                          disabled={deletingId === analysis._id}
+                          className="rounded-2xl border border-red-400/20 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-300 transition hover:bg-red-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          {deletingId === analysis._id ? "Deleting..." : "Delete"}
+                        </button>
+                      </div>
+
                   </div>
 
                   {analysis.analysisResult?.summary && (

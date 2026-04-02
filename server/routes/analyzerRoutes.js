@@ -3,6 +3,7 @@ import multer from "multer";
 import {
   analyzeResume,
   getUserAnalyses,
+  deleteAnalysis,
 } from "../controllers/analyzerController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
@@ -13,6 +14,7 @@ const upload = multer({
 });
 
 router.get("/history", protect, getUserAnalyses);
+router.delete("/:id", protect, deleteAnalysis);
 router.post("/", protect, upload.single("resumeFile"), analyzeResume);
 
 export default router;
