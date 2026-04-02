@@ -13,6 +13,8 @@ function Dashboard() {
   const [error, setError] = useState("");
   const [resumeLabel, setResumeLabel] = useState("");
   const [jobLabel, setJobLabel] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -62,13 +64,61 @@ function Dashboard() {
         throw new Error(data.message || "Something went wrong.");
       }
 
-      setAnalysis(data.analysis);
+      setAnalysis({
+        analysisResult: data.analysis,
+        resumeText: data.resumeText,
+        jobDescription: data.jobDescription,
+        resumeLabel: data.resumeLabel,
+        jobLabel: data.jobLabel,
+        originalFileName: data.originalFileName,
+      });
+
+      setSaved(false);
     } catch (err) {
       setError(err.message || "Failed to analyze resume.");
     } finally {
       setLoading(false);
     }
   };
+
+    const handleSaveAnalysis = async () => {
+      if (!analysis) return;
+
+      try {
+        setSaving(true);
+
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(`${API_BASE_URL}/api/analyzer/save`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            resumeText: analysis.resumeText,
+            jobDescription: analysis.jobDescription,
+            analysisResult: analysis.analysisResult,
+            resumeLabel: analysis.resumeLabel,
+            jobLabel: analysis.jobLabel,
+            originalFileName: analysis.originalFileName,
+          }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to save analysis.");
+        }
+
+        setSaved(true);
+      } catch (err) {
+        console.error("Save error:", err);
+        alert(err.message || "Failed to save analysis.");
+      } finally {
+        setSaving(false);
+      }
+    };
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
@@ -255,8 +305,19 @@ function Dashboard() {
             </div>
 
             <div className="max-h-[70vh] overflow-y-auto pr-2">
-              <AnalysisCard analysis={analysis} loading={loading} />
+              <AnalysisCard analysis={analysis?.analysisResult || null} loading={loading} />
             </div>
+              {analysis && (
+              <div className="mt-4">
+                <button
+                  onClick={handleSaveAnalysis}
+                  disabled={saving || saved}
+                  className="w-full rounded-2xl bg-cyan-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {saved ? "Saved ✔" : saving ? "Saving..." : "Save Analysis"}
+                </button>
+              </div>
+            )}
           </aside>
         </div>
       </main>
