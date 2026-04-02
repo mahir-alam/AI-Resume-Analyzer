@@ -41,8 +41,13 @@ function Dashboard() {
         formData.append("resumeFile", resumeFile);
       }
 
+      const token = localStorage.getItem("token");
+
       const response = await fetch(`${API_BASE_URL}/api/analyzer`, {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: formData,
       });
 

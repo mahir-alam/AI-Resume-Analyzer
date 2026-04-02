@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import { PDFParse } from "pdf-parse";
+import Analysis from "../models/Analysis.js";
 
 const analyzeResume = async (req, res) => {
   try {
@@ -113,10 +114,19 @@ ${hasJobDescription ? jobDescription.trim() : "Not provided"}
       });
     }
 
+    const savedAnalysis = await Analysis.create({
+      user: req.user.userId,
+      resumeText: finalResumeText,
+      jobDescription: jobDescription?.trim() || "",
+      analysisResult: parsed,
+    });
+
     return res.status(200).json({
       message: "Resume analyzed successfully.",
       analysis: parsed,
+      savedAnalysisId: savedAnalysis._id,
     });
+    
   } catch (error) {
     console.error("AI Error:", error);
 
