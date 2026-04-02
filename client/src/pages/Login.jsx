@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -54,7 +54,14 @@ function Login() {
         <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-300">
           Login
         </p>
-
+        <div className="w-[75vw] md:w-[60vw] mb-6">
+          <Link
+            to="/"
+            className="text-sm text-slate-400 transition hover:text-white"
+          >
+            ← Back to Home
+          </Link>
+        </div>
         <h1 className="mt-3 text-3xl font-semibold tracking-tight text-white">
           Welcome back
         </h1>
