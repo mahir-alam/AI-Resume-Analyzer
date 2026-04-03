@@ -33,7 +33,7 @@ function AnalysisCard({ analysis, loading }) {
             <h3 className="text-5xl font-semibold text-white">
               {analysis.overallScore}
             </h3>
-            <span className="pb-2 text-sm text-slate-300">/ 100</span>
+            <span className="pb-2 text-sm text-slate-300">/ 10</span>
           </div>
         </div>
 
@@ -47,7 +47,7 @@ function AnalysisCard({ analysis, loading }) {
               <h3 className="text-5xl font-semibold text-white">
                 {analysis.atsMatchScore}
               </h3>
-              <span className="pb-2 text-sm text-slate-300">/ 100</span>
+              <span className="pb-2 text-sm text-slate-300">/ 10</span>
             </div>
           </div>
         )}
