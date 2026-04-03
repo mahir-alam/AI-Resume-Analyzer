@@ -32,19 +32,30 @@ AI-powered web application that analyzes resumes and provides ATS-style feedback
 ## 📸 Screenshots
 
 ### 🚀 Landing Experience
-<img src="docs/screenshots/1_landing1.png" width="700"/>
-<img src="docs/screenshots/2_landing2.png" width="700"/>
-<img src="docs/screenshots/3_landing3.png" width="700"/>
+<p align="center">
+  <img src="docs/screenshots/1_landing1.png" width="45%"/>
+  <img src="docs/screenshots/2_landing2.png" width="45%"/>
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/3_landing3.png" width="60%"/>
+</p>
 
 ### 🧠 Resume Analyzer
-<img src="docs/screenshots/4_analyzer.png" width="700"/>
+<p align="center">
+  <img src="docs/screenshots/4_analyzer.png" width="70%"/>
+</p>
 
 ### 📊 Results & Insights
-<img src="docs/screenshots/5_result.png" width="700"/>
+<p align="center">
+  <img src="docs/screenshots/5_result.png" width="70%"/>
+</p>
 
 ### 📌 Detailed Feedback
-<img src="docs/screenshots/6_details1.png" width="700"/>
-<img src="docs/screenshots/7_details2.png" width="700"/>
+<p align="center">
+  <img src="docs/screenshots/6_details1.png" width="45%"/>
+  <img src="docs/screenshots/7_details2.png" width="45%"/>
+</p>
 
 ---
 
