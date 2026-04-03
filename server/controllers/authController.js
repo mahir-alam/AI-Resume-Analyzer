@@ -43,7 +43,7 @@ const registerUser = async (req, res) => {
 
     const token = jwt.sign(
       { userId: user._id },
-      process.env.JWT_SECRET || "defaultsecret",
+      process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
 
