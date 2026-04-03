@@ -29,6 +29,25 @@ AI-powered web application that analyzes resumes and provides ATS-style feedback
 
 ---
 
+## 📸 Screenshots
+
+### Landing Page
+![Landing 1](docs/screenshots/1_landing1.png)
+![Landing 2](docs/screenshots/2_landing2.png)
+![Landing 3](docs/screenshots/3_landing3.png)
+
+### Resume Analyzer
+![Analyzer](docs/screenshots/4_analyzer.png)
+
+### Analysis Result
+![Result](docs/screenshots/5_result.png)
+
+### Detailed Feedback
+![Details 1](docs/screenshots/6_details1.png)
+![Details 2](docs/screenshots/7_details2.png)
+
+---
+
 ## ⚙️ Setup (Local)
 
 ```bash
