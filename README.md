@@ -4,7 +4,6 @@ AI-powered web application that analyzes resumes and provides ATS-style feedback
 
 🌐 **Live Demo:** https://ai-resume-analyzer-ivory-psi.vercel.app  
 🎥 **Demo Video:** https://www.youtube.com/watch?v=vwf1yrI28TI  
-💻 **GitHub:** https://github.com/mahir-alam/AI-Resume-Analyzer  
 
 ---
 
